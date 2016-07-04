@@ -13,5 +13,9 @@ It uses websocket as communication protocol.
 **Send a pull request to;**   
 [https://github.com/DigitalHandcraft/cluster-chat](https://github.com/DigitalHandcraft/cluster-chat).
 
+## Licence
+
+MIT Licence
+
 ## Contact
 rk0der: [https://github.com/rk0der](https://github.com/rk0der)
