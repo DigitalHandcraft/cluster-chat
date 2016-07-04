@@ -50,6 +50,3 @@ class ChatServer
   end
 
 end
-
-server = ChatServer.new '0.0.0.0', 3000
-server.start
