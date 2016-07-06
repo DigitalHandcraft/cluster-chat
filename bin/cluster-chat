@@ -2,6 +2,8 @@
 $LOAD_PATH << 'lib'
 
 require 'chat_server'
-
+require 'indicator'
+indicator = Indicator.new
 server = ChatServer.new ARGV[0], ARGV[1]
+server.addReceiveEvent Proc.new {|m, c| indicator.show m, c }
 server.start

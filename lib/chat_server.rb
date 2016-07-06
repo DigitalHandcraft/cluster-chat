@@ -9,6 +9,11 @@ class ChatServer
     @clients = []
     @host = host
     @port = port
+    @events = []
+  end
+
+  def addReceiveEvent ev
+    @events << ev
   end
 
   def broadcast message
@@ -30,7 +35,6 @@ class ChatServer
       ws_conn.onmessage do |message|
         begin
           d = JSON.parse(message)
-          pp d
           case d['type']
           when 'join' then
             client[:name] = d['name']
@@ -42,6 +46,7 @@ class ChatServer
           else
             puts "wrong type"
           end
+          @events.each {|e| e.call [d, client] }
         rescue
           puts 'invalid JSON format'
         end
