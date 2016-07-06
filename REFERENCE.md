@@ -22,3 +22,16 @@ After establishing a connection, you should send "*Join*" message first.
 It's simple. All you should do is kill your connection.
 
 ## Message Format
+
+The below messages may be changed in the future updates.
+
+### Join
+
+Request the server to register your info.
+
+```
+{
+  "type": "join",
+  "name": <string>, // Username
+}
+```
