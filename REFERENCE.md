@@ -33,7 +33,7 @@ You must send this message at the very first.
 ```
 {
   "type": "join",
-  "name": <string>, // Username
+  "name": <string>  // Username
 }
 ```
 
@@ -44,6 +44,30 @@ All members of a room can receive your message.
 ```
 {
   "type": "public",
-  "content": <string>,  // What you want to say
+  "content": <string>   // What you want to say
+}
+```
+
+### Private message
+
+You can whisper to a specified member.
+
+```
+{
+  "type": "whisper",
+  "content": <string>
+}
+```
+
+## Client Side
+
+After receiving a message from a client,  
+the server send back a message like below;
+
+```
+{
+  "type": "response",
+  "name":     <string>,
+  "content":  <string>,
 }
 ```
