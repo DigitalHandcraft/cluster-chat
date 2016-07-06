@@ -46,7 +46,7 @@ class ChatServer
           else
             puts "wrong type"
           end
-          @events.each {|e| e.call [d, client] }
+          @events.each {|e| e.call d, client }
         rescue
           puts 'invalid JSON format'
         end
