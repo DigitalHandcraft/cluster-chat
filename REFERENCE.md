@@ -27,11 +27,22 @@ The below messages may be changed in the future updates.
 
 ### Join
 
-Request the server to register your info.
+Request the server to register your info.  
 
 ```
 {
   "type": "join",
   "name": <string>, // Username
+}
+```
+
+### Send your message to all
+
+All members of a room can receive your message.
+
+```
+{
+  "type": "public",
+  "content": ""
 }
 ```
