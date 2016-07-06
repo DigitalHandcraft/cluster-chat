@@ -28,6 +28,7 @@ The below messages may be changed in the future updates.
 ### Join
 
 Request the server to register your info.  
+You must send this message at the very first.
 
 ```
 {
@@ -43,6 +44,6 @@ All members of a room can receive your message.
 ```
 {
   "type": "public",
-  "content": ""
+  "content": <string>,  // What you want to say
 }
 ```
