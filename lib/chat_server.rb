@@ -20,6 +20,11 @@ class ChatServer
     @clients.each{|c| c[:conn].send(message) }
   end
 
+  def send_without names, message
+    dests = @clients.select {|c| !names.include? c[:name] }
+    dests.each {|c| c[:conn].send(message) }
+  end
+
   def start
     EM::WebSocket.start({:host => @host, :port => @port}) do |ws_conn|
       client = {name:'', conn:ws_conn}
@@ -38,10 +43,10 @@ class ChatServer
           case d['type']
           when 'join' then
             client[:name] = d['name']
-            message = {from:'system', content:"#{client[:name]} joined the room!!"}
-            broadcast JSON.unparse(message)
+            message = {type:'join', name:client[:name]}
+            send_without [client[:name]], JSON.unparse(message)
           when 'public' then
-            message = {from:client[:name], content:d['content']}
+            message = {type:'public', name:client[:name], content:d['content']}
             broadcast JSON.unparse(message)
           else
             puts "wrong type"
