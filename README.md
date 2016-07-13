@@ -8,6 +8,9 @@ It uses websocket as communication protocol.
 
 ## Run
 
+## Example
+See [https://digitalhandcraft.github.io/cluster-chat](https://digitalhandcraft.github.io/cluster-chat).
+
 ## Contributing
 
 **Send a pull request to;**   
