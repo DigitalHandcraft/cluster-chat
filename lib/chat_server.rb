@@ -44,7 +44,8 @@ class ChatServer
           when 'join' then
             client[:name] = d['name']
             message = {type:'join', name:client[:name]}
-            send_without [client[:name]], JSON.unparse(message)
+            broadcast JSON.unparse(message)
+            # send_without [client[:name]], JSON.unparse(message)
           when 'public' then
             message = {type:'public', name:client[:name], content:d['content']}
             broadcast JSON.unparse(message)
