@@ -20,6 +20,11 @@ class ChatServer
     @clients.each{|c| c[:conn].send(message) }
   end
 
+  def multicast names, message
+    dests = @clients.select {|c| names.include? c[:name] }
+    dests.each {|c| c[:conn].send(message) }
+  end
+
   def send_without names, message
     dests = @clients.select {|c| !names.include? c[:name] }
     dests.each {|c| c[:conn].send(message) }
@@ -39,16 +44,18 @@ class ChatServer
 
       ws_conn.onmessage do |message|
         begin
-          d = JSON.parse(message)
-          case d['type']
+          d = JSON.parse(message, {:symbolize_names => true})
+          case d[:type]
           when 'join' then
-            client[:name] = d['name']
-            message = {type:'join', name:client[:name]}
-            broadcast JSON.unparse(message)
+            client[:name] = d[:name]
+            broadcast message
             # send_without [client[:name]], JSON.unparse(message)
           when 'public' then
-            message = {type:'public', name:client[:name], content:d['content']}
-            broadcast JSON.unparse(message)
+            d[:name] = client[:name]
+            broadcast JSON.unparse(d)
+          when 'whisper' then
+            d[:from] = client[:name]
+            multicast [d[:from], d[:to]], JSON.unparse(d)
           else
             puts "wrong type"
           end
