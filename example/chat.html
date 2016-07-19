@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <title>cluster-chat</title>
+  <script>
+    // parse GET parameters
+    var arg = new Object;
+    var pair=location.search.substring(1).split('&');
+    for(var i=0;pair[i];i++) {
+        var kv = pair[i].split('=');
+        arg[kv[0]]=kv[1];
+    }
+    console.log(arg);
+
+    var connection = new WebSocket('ws://localhost:3000');
+    // When the connection is open, send some data to the server
+    connection.onopen = function () {
+      message = {type:'join', name:arg.screen_name};
+      connection.send(JSON.stringify(message));
+    };
+
+    // Log errors
+    connection.onerror = function (error) {
+      console.log('WebSocket Error ' + error);
+    };
+
+    // Log messages from the server
+    connection.onmessage = function (e) {
+      console.log('Server: ' + e.data);
+    };
+  </script>
+</head>
+<body>
+</body>
+</html>
