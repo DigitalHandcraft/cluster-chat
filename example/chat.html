@@ -2,6 +2,13 @@
 <html lang='en'>
 <head>
   <title>cluster-chat</title>
+  <style>
+    .container {
+      overflow: scroll;
+      width:80%;
+      height:320px;
+    }
+  </style>
   <script>
     // parse GET parameters
     var arg = new Object;
@@ -12,7 +19,9 @@
     }
     console.log(arg);
 
-    var connection = new WebSocket('ws://localhost:3000');
+    // establish the connection
+    var connection = new WebSocket(decodeURIComponent(arg.ws_server));
+
     // When the connection is open, send some data to the server
     connection.onopen = function () {
       message = {type:'join', name:arg.screen_name};
@@ -27,9 +36,61 @@
     // Log messages from the server
     connection.onmessage = function (e) {
       console.log('Server: ' + e.data);
+      var data = JSON.parse(e.data);
+
+      var mes_event = {};
+      mes_event['join'] = function(d) {
+        return d.name + ' has joined the room!!';
+      }
+      mes_event['public'] = function(d) {
+        return '[' + d.name + ']' + d.content;
+      }
+      mes_event['whisper'] = function(d) {
+        return '[From:' + d.from + ', To:' + d.to + ']' + d.content;
+      }
+      show_text(mes_event[data.type](data));
     };
+
+
+    // add text to display_area
+    var  show_text = function(str) {
+      var container = document.getElementById("display");
+      var node = document.createElement('div');
+      node.appendChild(document.createTextNode(str));
+      container.appendChild(node);
+    }
+
+    // EventListeners
+    var send_public = function() {
+      var text = document.getElementById("public_text");
+      message = {type:"public", content:text.value};
+      connection.send(JSON.stringify(message));
+    };
+
+    var send_private = function() {
+      var to = document.getElementById("private_to");
+      var text = document.getElementById("private_text");
+      message = {type:"whisper", to:to.value, content:text.value};
+      connection.send(JSON.stringify(message));
+    };
+
   </script>
 </head>
 <body>
+  <!-- Public -->
+  [Public] Message:
+  <input type="text" id="public_text" size="40" />
+  <button onclick="send_public();">send</button>
+  <br/><br/>
+  <!-- Private -->
+  [Private] To:
+  <input type="text" id="private_to" size="16" />
+  Message:
+  <input type="text" id="private_text" size="40" />
+  <button onclick="send_private();">send</button>
+  <br/><br/>
+  <!-- Display -->
+  <div id="display" class="container">
+  </div>
 </body>
 </html>
