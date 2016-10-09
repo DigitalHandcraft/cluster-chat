@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+$LOAD_PATH << 'lib'
+
+require 'chat_core'
+require 'ws_front'
+require 'indicator'
+
+indicator = Indicator.new
+core = ChatCore.new
+server = WSFront.new core, host: ARGV[0], port: ARGV[1]
+server.addEventHandler Proc.new {|m, c| indicator.show m, c }
+server.start
